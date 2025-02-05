@@ -1,0 +1,8 @@
+
+RewriteEngine On
+RewriteBase /VeilleHub_App/public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+
