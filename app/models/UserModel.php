@@ -30,12 +30,12 @@ class User extends Db
 
         try {
             // var_dump($userData);
-            
+
             $result = $this->conn->prepare("SELECT * FROM users WHERE email=?");
             $result->execute([$userData[0]]);
             $user = $result->fetch(PDO::FETCH_ASSOC);
             // var_dump($user);
-        
+
             if ($user && password_verify($userData[1], $user['password'])) {
                 return  $user;
             }
@@ -44,6 +44,39 @@ class User extends Db
             echo "Error: " . $e->getMessage();
         }
     }
+
+
+
+
+    public function deleteUser($user)
+    {
+        try {
+            $sql = "DELETE FROM users WHERE id_user = ?";
+            $result = $this->conn->prepare($sql);
+            $result->execute([$user]);
+
+            return $result->rowCount();
+        } catch (PDOException $e) {
+            throw new Exception("Erreur PDO : " . $e->getMessage());
+        }
+    }
+
+
+
+    public function changeStatusUser($user, $newStatus)
+    {
+        try {
+            $sql = "UPDATE users SET is_Vlalide = ? WHERE id_user = ?";
+            $result = $this->conn->prepare($sql);
+            $result->execute([$newStatus, $user]);
+        
+            return $result->rowCount();
+        } catch (PDOException $e) {
+            throw new Exception("Erreur PDO : " . $e->getMessage());
+        }
+    }
+
+
 
     public function getStatistics()
     {
@@ -74,7 +107,7 @@ class User extends Db
 
     public function getAllUsers($filter, $userToSearch = '')
     {
-        $query = "SELECT * FROM users WHERE role != 'Enseignant'"; 
+        $query = "SELECT * FROM users WHERE role != 'Enseignant'";
 
         // add filter to query
         if ($filter == 'Etudiant') {

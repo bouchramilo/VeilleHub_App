@@ -32,11 +32,13 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 Route::get('/home', [HomeController::class, 'index']);
 Route::get('/teacher', [TeacherController::class, 'index']);
-Route::get('/teacher/students', [TeacherController::class, 'handleStudents']);
+Route::get('/teacher/students', [TeacherController::class, 'showStudents']);
 Route::get('/teacher/statistiques', [TeacherController::class, 'statistiques']);
 Route::get('/teacher/subjects', [TeacherController::class, 'subjects']);
 Route::get('/teacher/suggestions', [TeacherController::class, 'suggestions']);
 
+Route::post('/teacher/students/changeStatus', [TeacherController::class, 'changeStatus']);
+Route::post('/teacher/students/delete', [TeacherController::class, 'deleteUsers']);
 Route::post('/teacher/suggestions/delete', [TeacherController::class, 'handleSuggestions']);
 Route::post('/teacher/suggestions/changeStatus', [TeacherController::class, 'handleSuggestions']);
 Route::post('/teacher/subjects/add', [TeacherController::class, 'handleSubject']);

@@ -75,10 +75,11 @@
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-no-wrap border-b-2 border-indigo-600">
-                                        <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to change the status of this user?');">
+                                        <form method="POST" action="/teacher/students/changeStatus" style="display:inline;">
                                             <input type="hidden" name="block_user_id" value="<?= $user['id_user']; ?>">
-                                            <button type="submit" class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
-                                                <?= $user['is_Valide'] == 1 ? "Active" : "blocked" ?>
+                                            <input type="hidden" name="status_user" value="<?= $user['is_Vlalide']; ?>">
+                                            <button type="submit" name="bnt_user_block" class="inline-flex px-2 text-xs font-semibold leading-5  bg-green-100 rounded-full <?= $user['is_Vlalide'] == 1 ? "text-green-500" : "text-red-500" ?>">
+                                                <?= $user['is_Vlalide'] == 1 ? "Active" : "blocked" ?>
                                             </button>
                                         </form>
                                     </td>
@@ -89,7 +90,7 @@
 
                                     <td class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b-2 border-indigo-600">
                                         <!-- Remove User Form with Confirmation -->
-                                        <form method="POST" style="display:inline;">
+                                        <form method="POST" action="/teacher/students/delete" style="display:inline;">
                                             <input type="hidden" name="remove_user" value="<?= $user['id_user']; ?>">
                                             <button type="submit" name="delete_user" class="text-indigo-600 hover:text-indigo-900">Remove</button>
                                         </form>

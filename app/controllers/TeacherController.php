@@ -31,6 +31,17 @@ class TeacherController extends BaseController
       $this->renderDashboard('teacher/index', ["statistics" => $statistics]);
    }
 
+   // *****************************************************************************************************************************************
+   public function showStudents()
+   {
+      // Get filter and search values from GET
+      $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
+      $userToSearch = isset($_GET['userToSearch']) ? $_GET['userToSearch'] : '';
+
+      $users = $this->UserModel->getAllUsers($filter, $userToSearch);
+      $this->renderDashboard('teacher/students', ["users" => $users]);
+   }
+
 
    // *****************************************************************************************************************************************
    public function statistiques()
@@ -55,10 +66,10 @@ class TeacherController extends BaseController
 
 
    // *****************************************************************************************************************************************
-   public function addSubject()
-   {
-      $this->renderDashboard('teacher/subjects/add');
-   }
+   // public function addSubject()
+   // {
+   //    $this->renderDashboard('teacher/subjects/add');
+   // }
 
    // *****************************************************************************************************************************************
    public function handleSubject()
@@ -146,22 +157,54 @@ class TeacherController extends BaseController
    }
 
 
-   // *****************************************************************************************************************************************
-   public function handleStudents()
+   public function deleteUsers()
    {
 
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+         if (isset($_POST['delete_user'])) {
 
+            $id_user = $_POST['remove_user'];
 
-      // Get filter and search values from GET
-      $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all'; // Default to 'all' if no filter is selected
-      $userToSearch = isset($_GET['userToSearch']) ? $_GET['userToSearch'] : ''; // Default to empty if no search term is provided
-      // var_dump($userToSearch);die();
+            $deleteSub = $this->UserModel->deleteUser($id_user);
 
-      // Call showUsers with both filter and search term
-      $users = $this->UserModel->getAllUsers($filter, $userToSearch);
-      $this->renderDashboard('teacher/students', ["users" => $users]);
+            if ($deleteSub) {
+               header('Location: /teacher/students');
+               //   echo "vous aver supprimer un sujet proposer avec succes .";
+            }
+         }
+      }
    }
+
+   public function changeStatus()
+   {
+       if ($_SERVER["REQUEST_METHOD"] == "POST") {
+           if (isset($_POST['bnt_user_block'])) {
+               $id_user = (int) $_POST['block_user_id'];
+               $oldStatus = (int) $_POST['status_user'];
+   
+               // var_dump($id_user, $oldStatus);
+   
+               $newStatus = ($oldStatus === 1) ? 0 : 1;
+               // echo "Nouveau statut : " . $newStatus;
+   
+               $updatedRows = $this->UserModel->changeStatusUser($id_user, $newStatus);
+   
+               if ($updatedRows > 0) {
+                   header('Location: /teacher/students');
+                   exit();
+               } 
+               // else {
+               //     echo "Aucune mise à jour effectuée.";
+               // }
+           }
+       }
+   }
+
+
+
+
+
 
    // function to remove user
    // function removeUser($idUser){
