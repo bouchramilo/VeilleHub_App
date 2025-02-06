@@ -2,20 +2,22 @@
     <div class="max-w-screen-xl mx-auto">
         <div class="flex flex-wrap items-center md:justify-between max-md:flex-col gap-6">
             <div>
-                <a href='javascript:void(0)'><img src="https://readymadeui.com/readymadeui-light.svg" alt="logo" class='w-36 ' /></a>
+                <a href='/home'>
+                    <h1 class="text-3xl"><span class="text-indigo-600 font-bold">V</span>eille<span class="text-indigo-600 font-bold">H</span>ub</h1>
+                </a>
             </div>
 
-            <ul class="flex items-center justify-center flex-wrap gap-y-2 md:justify-end space-x-6">
-                <li><a href="javascript:void(0)" class="text-gray-300 hover:underline text-base">Home</a></li>
-                <li><a href="javascript:void(0)" class="text-gray-300 hover:underline text-base">About</a></li>
+            <!-- <ul class="flex items-center justify-center flex-wrap gap-y-2 md:justify-end space-x-6">
+                <li><a href="/home" class="text-gray-300 hover:underline text-base">Home</a></li>
+                <li><a href="/" class="text-gray-300 hover:underline text-base">About</a></li>
                 <li><a href="javascript:void(0)" class="text-gray-300 hover:underline text-base">Services</a></li>
                 <li><a href="javascript:void(0)" class="text-gray-300 hover:underline text-base">Contact</a></li>
-            </ul>
+            </ul> -->
         </div>
 
         <hr class="my-6 border-gray-500" />
 
-        <p class='text-center text-gray-300 text-base'>© ReadymadeUI. All rights reserved.</p>
+        <p class='text-center text-gray-300 text-base'>©<span class="text-indigo-500 font-bold">VeilleHub</span>. All rights <span class="text-indigo-500 underline">reserved</span>.</p>
     </div>
 </footer>
 

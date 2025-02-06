@@ -83,6 +83,11 @@ CREATE TABLE presentations (
     FOREIGN KEY (id_enseignant) REFERENCES users(id_user) ON DELETE CASCADE
 );
 
+ALTER TABLE presentations ADD COLUMN description VARCHAR(255);
+ALTER TABLE presentations 
+MODIFY date_realisation DATETIME DEFAULT NULL;
+
+
 CREATE TABLE notifications (
     id_notification INT PRIMARY KEY AUTO_INCREMENT,
     date_envoi DATETIME NOT NULL,

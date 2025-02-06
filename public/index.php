@@ -37,6 +37,11 @@ Route::get('/teacher/statistiques', [TeacherController::class, 'statistiques']);
 Route::get('/teacher/subjects', [TeacherController::class, 'subjects']);
 Route::get('/teacher/suggestions', [TeacherController::class, 'suggestions']);
 
+Route::post('/teacher/suggestions/delete', [TeacherController::class, 'handleSuggestions']);
+Route::post('/teacher/suggestions/changeStatus', [TeacherController::class, 'handleSuggestions']);
+Route::post('/teacher/subjects/add', [TeacherController::class, 'handleSubject']);
+Route::post('/teacher/subject/delete', [TeacherController::class, 'handleSubject']);
+
 
 
 // end teacher routes 

@@ -12,8 +12,8 @@
 
     <header class='flex shadow-md py-4 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] tracking-wide relative z-50'>
         <div class='flex flex-wrap items-center justify-between gap-5 w-full'>
-            <a href="javascript:void(0)" class="max-sm:hidden"><img src="https://readymadeui.com/readymadeui.svg" alt="logo" class='w-36' /></a>
-            <a href="javascript:void(0)" class="hidden max-sm:block"><img src="https://readymadeui.com/readymadeui-short.svg" alt="logo" class='w-9' /></a>
+            <a href="/home" class="max-sm:hidden"><h1 class="text-3xl"><span class="text-indigo-600 font-bold">V</span>eille<span class="text-indigo-600 font-bold">H</span>ub</h1></a>
+            <a href="/home" class="hidden max-sm:block"><h1 class="text-3xl"><span class="text-indigo-600 font-bold">V</span><span class="text-indigo-600 font-bold">H</span></h1></a>
 
             <div id="collapseMenu"
                 class='max-lg:hidden lg:!block max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-50 max-lg:before:inset-0 max-lg:before:z-50'>
@@ -31,7 +31,7 @@
                 <ul
                     class='lg:flex gap-x-5 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
                     <li class='mb-6 hidden max-lg:block'>
-                        <a href="javascript:void(0)"><img src="https://readymadeui.com/readymadeui.svg" alt="logo" class='w-36' />
+                        <a href="/home"><h1 class="text-3xl"><span class="text-indigo-600 font-bold">V</span>eille<span class="text-indigo-600 font-bold">H</span>ub</h1>
                         </a>
                     </li>
                     <?php if (isset($_SESSION['user_loged_in_role']) && $_SESSION['user_loged_in_role'] == "Enseignant") : ?>
@@ -61,27 +61,27 @@
                         </li>
                     <?php elseif (isset($_SESSION['user_loged_in_role']) && $_SESSION['user_loged_in_role'] == "Etudiant") : ?>
                         <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
-                            <a href='javascript:void(0)'
+                            <a href='/home'
                                 class='hover:text-[#4CAF50] text-[#4CAF50] block font-semibold text-[15px]'>Home</a>
                         </li>
                         <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
-                            <a href='javascript:void(0)'
+                            <a href='/student/calendar'
                                 class='hover:text-[#4CAF50] text-[#2196F3] block font-semibold text-[15px]'>calendar</a>
                         </li>
                         <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
-                            <a href='javascript:void(0)'
+                            <a href='/student/my_suggestions'
                                 class='hover:text-[#4CAF50] text-[#2196F3] block font-semibold text-[15px]'>My suggestions</a>
                         </li>
                         <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
-                            <a href='javascript:void(0)'
+                            <a href='/student/subjects'
                                 class='hover:text-[#4CAF50] text-[#2196F3] block font-semibold text-[15px]'>subjects</a>
                         </li>
                         <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
-                            <a href='javascript:void(0)'
+                            <a href='/student/notifications'
                                 class='hover:text-[#4CAF50] text-[#2196F3] block font-semibold text-[15px]'>Notifications</a>
                         </li>
                         <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
-                            <a href='javascript:void(0)'
+                            <a href='/student/statistiques'
                                 class='hover:text-[#4CAF50] text-[#2196F3] block font-semibold text-[15px]'>Statistiques</a>
                         </li>
                     <?php endif; ?>

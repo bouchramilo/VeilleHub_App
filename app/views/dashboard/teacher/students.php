@@ -6,7 +6,7 @@
 <main class="flex-1 overflow-x-hidden overflow-y-auto bg-blue-200">
     <div class="container px-6 py-8 mx-auto">
         <div class="flex justify-between">
-            <h3 class="text-3xl font-medium text-gray-700">Users</h3>
+            <h3 class="text-3xl font-extrabold text-gray-800 inline-block">Users</h3>
 
             <!-- Search input -->
             <form method="GET">
@@ -33,31 +33,31 @@
         <div class="flex flex-col mt-8">
             <div class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
                 <div
-                    class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
+                    class="inline-block min-w-full overflow-hidden align-middle border-b-2 border-indigo-600 shadow sm:rounded-lg">
                     <table class="min-w-full">
-                        <thead>
+                        <thead class="bg-indigo-600 whitespace-nowrap">
                             <tr>
                                 <th
-                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-100 uppercase border-b-2 border-indigo-600 ">
                                     Name</th>
                                 <th
-                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-100 uppercase border-b-2 border-indigo-600 ">
                                     Email</th>
                                 <th
-                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-100 uppercase border-b-2 border-indigo-600 ">
                                     Status</th>
                                 <th
-                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-100 uppercase border-b-2 border-indigo-600 ">
                                     Role</th>
-                                <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-right text-gray-500 uppercase border-b border-gray-200 bg-gray-50">Delete</th>
+                                <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-right text-gray-100 uppercase border-b-2 border-indigo-600 ">Delete</th>
                             </tr>
                         </thead>
 
-                        <tbody class="bg-white">
+                        <tbody class="bg-indigo-50">
                             <!-- users -->
                             <?php foreach ($users as $user): ?>
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b-2 border-indigo-600">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 w-10 h-10 bg-gray-500 text-gray-100 text-xl rounded-full flex justify-center items-center uppercase">
                                                 <?= htmlspecialchars($user['nom'])[0].htmlspecialchars($user['prenom'])[0] ?>
@@ -70,11 +70,11 @@
                                             </div>
                                     </td>
 
-                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b-2 border-indigo-600">
                                         <div class="text-sm leading-5 text-gray-900 w-full"><?= htmlspecialchars($user['email']); ?></div>
                                     </td>
 
-                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b-2 border-indigo-600">
                                         <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to change the status of this user?');">
                                             <input type="hidden" name="block_user_id" value="<?= $user['id_user']; ?>">
                                             <button type="submit" class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
@@ -83,11 +83,11 @@
                                         </form>
                                     </td>
 
-                                    <td class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                                    <td class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b-2 border-indigo-600">
                                         <?= $user['role']; ?>
                                     </td>
 
-                                    <td class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
+                                    <td class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b-2 border-indigo-600">
                                         <!-- Remove User Form with Confirmation -->
                                         <form method="POST" style="display:inline;">
                                             <input type="hidden" name="remove_user" value="<?= $user['id_user']; ?>">
