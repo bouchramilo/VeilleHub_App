@@ -23,8 +23,6 @@ class AuthController extends BaseController
 
     public function handleRegister()
     {
-
-
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_POST['signup'])) {
                 // echo "<pre>";
@@ -59,9 +57,10 @@ class AuthController extends BaseController
             }
         }
     }
+
+
     public function handleLogin()
     {
-
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_POST['login'])) {
                 $email = $_POST['email'];
@@ -76,11 +75,11 @@ class AuthController extends BaseController
                 $_SESSION['user_loged_in_nome'] = $user['nom'];
 
                 if ($user && $role == 'Enseignant') {
-                    header('Location: /teacher/students');
-                    echo "vous etes connecter avec succes comme un Enseignant.";
+                    header('Location: /teacher/statistiques');
+                    // echo "vous etes connecter avec succes comme un Enseignant.";
                 } else if ($user && $role == 'Etudiant') {
-                    header('Location: /student/dashboard');
-                    echo "vous etes connecter avec succes comme un Etudiant.";
+                    header('Location: /student/calendar');
+                    // echo "vous etes connecter avec succes comme un Etudiant.";
                 } 
             }
         }

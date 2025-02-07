@@ -34,24 +34,6 @@ END;
 DELIMITER ;
 
 
-
-
-
--- CREATE TABLE etudiants (
---     id_etudiant INT PRIMARY KEY,
---     FOREIGN KEY (id_etudiant) REFERENCES users(id_user) ON DELETE CASCADE
--- );
-
--- CREATE TABLE enseignants (
---     id_enseignant INT PRIMARY KEY,
---     FOREIGN KEY (id_enseignant) REFERENCES users(id_user) ON DELETE CASCADE
--- );
-
--- CREATE TABLE admin (
---     id_admin INT PRIMARY KEY,
---     FOREIGN KEY (id_admin) REFERENCES users(id_user) ON DELETE CASCADE
--- );
-
 CREATE TABLE sujets (
     id_sujet INT PRIMARY KEY AUTO_INCREMENT,
     id_etudiant INT NOT NULL,
@@ -76,8 +58,9 @@ CREATE TABLE calendriers (
 CREATE TABLE presentations (
     id_presentation INT PRIMARY KEY AUTO_INCREMENT,
     titre VARCHAR(255) NOT NULL,
-    date_realisation DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_realisation DATETIME DEFAULT NULL,
     lien_presentation VARCHAR(255),
+    description VARCHAR(255),
     status ENUM('A venir', 'Passé') DEFAULT 'A venir',
     id_enseignant INT NOT NULL,
     FOREIGN KEY (id_enseignant) REFERENCES users(id_user) ON DELETE CASCADE

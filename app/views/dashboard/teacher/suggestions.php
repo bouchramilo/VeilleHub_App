@@ -1,9 +1,9 @@
 <?php require_once(__DIR__ . '/../../partials/header.php'); ?>
 
-
-
-
 <main class="flex-1 overflow-x-hidden overflow-y-auto bg-blue-200 min-h-[600px]">
+
+
+
     <div class="container px-6 py-8 mx-auto">
         <div class="flex justify-between">
             <h3 class="text-3xl font-extrabold text-gray-800 inline-block">Suggestions</h3>
@@ -16,18 +16,18 @@
                             <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
                     </span>
-                    <input type="text" name="userToSearch" onchange="this.form.submit()" class="w-32 pl-10 py-1 pr-4 rounded-md form-input sm:w-64 focus:border-indigo-600 focus:outline-none" placeholder="Search" value="<?= isset($_GET['userToSearch']) ? htmlspecialchars($_GET['userToSearch']) : '' ?>">
+                    <input type="text" name="suggToSearch" onchange="this.form.submit()" class="w-32 pl-10 py-1 pr-4 rounded-md form-input sm:w-64 focus:border-indigo-600 focus:outline-none" placeholder="Search" value="<?= isset($_GET['userToSearch']) ? htmlspecialchars($_GET['userToSearch']) : '' ?>">
                 </div>
             </form>
 
             <!-- Filter select -->
-            <!-- <form method="GET">
+            <form method="GET">
                 <select name="filter" class="rounded-lg px-2 py-1 focus:outline-none" onchange="this.form.submit()">
                     <option value="all" <?= isset($_GET['filter']) && $_GET['filter'] == 'all' ? 'selected' : '' ?>>ALL</option>
-                    <option value="clients" <?= isset($_GET['filter']) && $_GET['filter'] == 'Enseignant' ? 'selected' : '' ?>>Enseignants</option>
-                    <option value="freelancers" <?= isset($_GET['filter']) && $_GET['filter'] == 'Etudiant' ? 'selected' : '' ?>>Etudiants</option>
+                    <option value="Proposé" <?= isset($_GET['filter']) && $_GET['filter'] == 'Proposé' ? 'selected' : '' ?>>Proposé</option>
+                    <option value="Validé" <?= isset($_GET['filter']) && $_GET['filter'] == 'Validé' ? 'selected' : '' ?>>Validé</option>
                 </select>
-            </form> -->
+            </form>
         </div>
 
         <div class="flex flex-col mt-8">
@@ -68,7 +68,7 @@
                                         <div class="text-sm leading-5 text-gray-900 w-full"><?= htmlspecialchars($suggestion->description); ?></div>
                                     </td>
                                     <td class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b-2 border-indigo-600">
-                                        <?= $suggestion->id_etudiant; ?>
+                                        <?= $suggestion->nom . ' ' . $suggestion->prenom; ?>
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-no-wrap border-b-2 border-indigo-600">
@@ -106,6 +106,16 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
 </main>
 
 

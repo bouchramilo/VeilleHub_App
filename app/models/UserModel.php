@@ -3,11 +3,14 @@ require_once(__DIR__ . '/../config/db.php');
 class User extends Db
 {
 
+    // **********************************************************************************************************************************************************************
     public function __construct()
     {
         parent::__construct();
     }
 
+
+    // **********************************************************************************************************************************************************************
     public function register($user)
     {
         try {
@@ -24,17 +27,13 @@ class User extends Db
     }
 
 
-
+    // **********************************************************************************************************************************************************************
     public function login($userData)
     {
-
         try {
-            // var_dump($userData);
-
             $result = $this->conn->prepare("SELECT * FROM users WHERE email=?");
             $result->execute([$userData[0]]);
             $user = $result->fetch(PDO::FETCH_ASSOC);
-            // var_dump($user);
 
             if ($user && password_verify($userData[1], $user['password'])) {
                 return  $user;
@@ -47,7 +46,7 @@ class User extends Db
 
 
 
-
+    // **********************************************************************************************************************************************************************
     public function deleteUser($user)
     {
         try {
@@ -62,14 +61,14 @@ class User extends Db
     }
 
 
-
+    // **********************************************************************************************************************************************************************
     public function changeStatusUser($user, $newStatus)
     {
         try {
             $sql = "UPDATE users SET is_Vlalide = ? WHERE id_user = ?";
             $result = $this->conn->prepare($sql);
             $result->execute([$newStatus, $user]);
-        
+
             return $result->rowCount();
         } catch (PDOException $e) {
             throw new Exception("Erreur PDO : " . $e->getMessage());
@@ -78,33 +77,40 @@ class User extends Db
 
 
 
+    //    **********************************************************************************************************************************************************************
     public function getStatistics()
     {
         $statistics = [];
 
-        // Total number of users
-        $query = $this->conn->prepare("SELECT COUNT(*) AS total_users FROM users");
-        $query->execute();
-        $statistics['total_users'] = $query->fetch(PDO::FETCH_ASSOC)['total_users'];
+        // Total des présentations effectuées
+        $sql1 = "SELECT COUNT(*) AS total_presentations FROM presentations WHERE status = 'Passé'";
+        $result1 = $this->conn->query($sql1);
+        $total_presentations = $result1->fetch(PDO::FETCH_ASSOC)['total_presentations'];
 
-        // Total number of published projects
-        $query = $this->conn->prepare("SELECT COUNT(*) AS total_projects FROM projets");
-        $query->execute();
-        $statistics['total_projects'] = $query->fetch(PDO::FETCH_ASSOC)['total_projects'];
+        // Étudiants les plus actifs
+        $sql2 = "SELECT u.id_user, u.nom, u.prenom, COUNT(s.id_sujet) AS nombre_sujets
+         FROM users u
+         JOIN sujets s ON u.id_user = s.id_etudiant
+         GROUP BY u.id_user, u.nom, u.prenom
+         ORDER BY nombre_sujets DESC
+         LIMIT 5";
+        $top_students = $this->conn->query($sql2)->fetchAll(PDO::FETCH_ASSOC);
 
-        // Total number of freelancers
-        $query = $this->conn->prepare("SELECT COUNT(*) AS total_freelancers FROM users WHERE role = '3'");
-        $query->execute();
-        $statistics['total_freelancers'] = $query->fetch(PDO::FETCH_ASSOC)['total_freelancers'];
+        // Taux de participation des étudiants
+        $sql3 = "SELECT (COUNT(DISTINCT s.id_etudiant) / COUNT(DISTINCT u.id_user)) * 100 AS taux_participation
+         FROM users u
+         LEFT JOIN sujets s ON u.id_user = s.id_etudiant
+         WHERE u.role = 'Etudiant'";
+        $result3 = $this->conn->query($sql3);
+        $taux_participation = $result3->fetch(PDO::FETCH_ASSOC)['taux_participation'];
 
-        // Number of ongoing offers (status = 2)
-        $query = $this->conn->prepare("SELECT COUNT(*) AS ongoing_offers FROM offres WHERE status = 2");
-        $query->execute();
-        $statistics['ongoing_offers'] = $query->fetch(PDO::FETCH_ASSOC)['ongoing_offers'];
+        $statistics = [$total_presentations, $taux_participation, $top_students];
 
         return $statistics;
     }
 
+
+    // **********************************************************************************************************************************************************************
     public function getAllUsers($filter, $userToSearch = '')
     {
         $query = "SELECT * FROM users WHERE role != 'Enseignant'";

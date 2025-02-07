@@ -3,10 +3,10 @@
 
 
 
-<main class="flex-1 overflow-x-hidden overflow-y-auto bg-blue-200">
+<main class="flex-1 overflow-x-hidden overflow-y-auto bg-blue-200 min-h-[600px]">
     <div class="container px-6 py-8 mx-auto">
         <div class="flex justify-between">
-            <h3 class="text-3xl font-extrabold text-gray-800 inline-block">Users</h3>
+            <h3 class="text-3xl font-extrabold text-gray-800 inline-block">Students</h3>
 
             <!-- Search input -->
             <form method="GET">

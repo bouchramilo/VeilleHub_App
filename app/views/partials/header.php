@@ -6,14 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <title>Document</title>
+
+    <!-- pour le calendrier **************************************************************** -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+    <!-- pour le calendrier **************************************************************** -->
+
+
 </head>
 
 <body>
 
     <header class='flex shadow-md py-4 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] tracking-wide relative z-50'>
         <div class='flex flex-wrap items-center justify-between gap-5 w-full'>
-            <a href="/home" class="max-sm:hidden"><h1 class="text-3xl"><span class="text-indigo-600 font-bold">V</span>eille<span class="text-indigo-600 font-bold">H</span>ub</h1></a>
-            <a href="/home" class="hidden max-sm:block"><h1 class="text-3xl"><span class="text-indigo-600 font-bold">V</span><span class="text-indigo-600 font-bold">H</span></h1></a>
+            <a href="/home" class="max-sm:hidden">
+                <h1 class="text-3xl"><span class="text-indigo-600 font-bold">V</span>eille<span class="text-indigo-600 font-bold">H</span>ub</h1>
+            </a>
+            <a href="/home" class="hidden max-sm:block">
+                <h1 class="text-3xl"><span class="text-indigo-600 font-bold">V</span><span class="text-indigo-600 font-bold">H</span></h1>
+            </a>
 
             <div id="collapseMenu"
                 class='max-lg:hidden lg:!block max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-50 max-lg:before:inset-0 max-lg:before:z-50'>
@@ -31,7 +41,8 @@
                 <ul
                     class='lg:flex gap-x-5 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
                     <li class='mb-6 hidden max-lg:block'>
-                        <a href="/home"><h1 class="text-3xl"><span class="text-indigo-600 font-bold">V</span>eille<span class="text-indigo-600 font-bold">H</span>ub</h1>
+                        <a href="/home">
+                            <h1 class="text-3xl"><span class="text-indigo-600 font-bold">V</span>eille<span class="text-indigo-600 font-bold">H</span>ub</h1>
                         </a>
                     </li>
                     <?php if (isset($_SESSION['user_loged_in_role']) && $_SESSION['user_loged_in_role'] == "Enseignant") : ?>
