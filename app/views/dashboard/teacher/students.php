@@ -49,6 +49,9 @@
                                 <th
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-100 uppercase border-b-2 border-indigo-600 ">
                                     Role</th>
+                                <th
+                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-100 uppercase border-b-2 border-indigo-600 ">
+                                    nbr of presentation</th>
                                 <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-right text-gray-100 uppercase border-b-2 border-indigo-600 ">Delete</th>
                             </tr>
                         </thead>
@@ -60,7 +63,7 @@
                                     <td class="px-6 py-4 whitespace-no-wrap border-b-2 border-indigo-600">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 w-10 h-10 bg-gray-500 text-gray-100 text-xl rounded-full flex justify-center items-center uppercase">
-                                                <?= htmlspecialchars($user['nom'])[0].htmlspecialchars($user['prenom'])[0] ?>
+                                                <?= htmlspecialchars($user['nom'])[0] . htmlspecialchars($user['prenom'])[0] ?>
                                             </div>
 
                                             <div class="ml-4">
@@ -87,9 +90,11 @@
                                     <td class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b-2 border-indigo-600">
                                         <?= $user['role']; ?>
                                     </td>
+                                    <td class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b-2 border-indigo-600">
+                                        <?= $user['nombre_participations']; ?>
+                                    </td>
 
                                     <td class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b-2 border-indigo-600">
-                                        <!-- Remove User Form with Confirmation -->
                                         <form method="POST" action="/teacher/students/delete" style="display:inline;">
                                             <input type="hidden" name="remove_user" value="<?= $user['id_user']; ?>">
                                             <button type="submit" name="delete_user" class="text-indigo-600 hover:text-indigo-900">Remove</button>

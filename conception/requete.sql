@@ -6,6 +6,12 @@ select * from presentations;
 select * from sujets;
 
 
+INSERT INTO calendriers(id_etudiant, id_presentation, date_de_presentation) VALUES(3, 4, )
+
+INSERT INTO calendriers (id_etudiant, id_presentation, date_de_presentation) 
+VALUES 
+(3, 5, '2025-02-15 10:00:00');
+
 
 
 -- INSERT INTO sujets (id_etudiant, titre, description, id_enseignant, status) VALUES

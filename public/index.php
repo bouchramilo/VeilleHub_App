@@ -25,17 +25,22 @@ Route::post('/register', [AuthController::class, 'handleRegister']);
 Route::get('/login', [AuthController::class, 'showleLogin']);
 Route::post('/login', [AuthController::class, 'handleLogin']);
 Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/forgotPassword', [AuthController::class, 'forgotPassword']);
+Route::post('/forgotPassword', [AuthController::class, 'resetPassword']);
+Route::get('/initialPsswd', [AuthController::class, 'initialPsswd']);
+Route::post('/initialPsswd', [AuthController::class, 'restartPsswd']);
 
 
 // teacher routers **********************************************************************************************************************************************************************
 
 // GET
 Route::get('/home', [HomeController::class, 'index']);
-Route::get('/teacher/calendar', [TeacherController::class, 'index']);
+Route::get('/teacher/calendar', [TeacherController::class, 'showCalendar']);
 Route::get('/teacher/students', [TeacherController::class, 'showStudents']);
 Route::get('/teacher/statistiques', [TeacherController::class, 'statistiques']);
 Route::get('/teacher/subjects', [TeacherController::class, 'subjects']);
 Route::get('/teacher/suggestions', [TeacherController::class, 'suggestions']);
+Route::get('/teacher/subject/update', [TeacherController::class, 'updatePresentation']);
 
 // POST 
 Route::post('/teacher/students/changeStatus', [TeacherController::class, 'changeStatus']);
@@ -44,6 +49,9 @@ Route::post('/teacher/suggestions/delete', [TeacherController::class, 'handleSug
 Route::post('/teacher/suggestions/changeStatus', [TeacherController::class, 'handleSuggestions']);
 Route::post('/teacher/subjects/add', [TeacherController::class, 'handleSubject']);
 Route::post('/teacher/subject/delete', [TeacherController::class, 'handleSubject']);
+Route::post('/teacher/actions/update/save', [TeacherController::class, 'saveUpdatePresentation']);
+Route::post('/teacher/calendar/add', [TeacherController::class, 'addToCalendar']);
+Route::post('/teacher/calendar/delete', [TeacherController::class, 'deleteToCalendar']);
 
 
 

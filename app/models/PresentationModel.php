@@ -9,6 +9,7 @@ class Presentation extends Db
     private string $description;
     private string $status = 'A venir';
     private string $date_realisation;
+    private string $lien;
 
     // Constructeur *****************************************************************************************************************************************
     public function __construct($title = null, $description = null, $status = null, $date_realisation = null)
@@ -47,6 +48,11 @@ class Presentation extends Db
         return $this->date_realisation;
     }
 
+    public function getLink()
+    {
+        return $this->lien;
+    }
+
     // Setters *****************************************************************************************************************************************
     public function setId($id)
     {
@@ -72,6 +78,61 @@ class Presentation extends Db
     {
         $this->date_realisation = $date_realisation;
     }
+
+    public function setLink($link)
+    {
+        $this->lien = $link;
+    }
+
+
+    // fonction d'ajout des presentation : *****************************************************************************************************************************************
+    public function getPresentationById()
+    {
+        try {
+            $sql = "SELECT * FROM presentations WHERE id_presentation = ?";
+            $result = $this->conn->prepare($sql);
+
+            $result->execute([$this->id]);
+
+            return $result->fetch(PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            echo "Erreur PDO : " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Erreur générale : " . $e->getMessage();
+        }
+    }
+
+
+
+    // fonction d'update des presentation : *****************************************************************************************************************************************
+    public function updatePresentation($title, $description, $date, $status, $lien)
+    {
+        try {
+            $sql = "UPDATE presentations SET titre = ?, description = ?, date_realisation = ?, status = ?";
+            $params = [$title, $description, $date, $status];
+
+            if ($status == 'Passé') {
+                $sql .= ", lien_presentation = ?";
+                $params[] = $lien;
+            }
+
+            $sql .= " WHERE id_presentation = ?";
+            $params[] = $this->id;
+
+            $result = $this->conn->prepare($sql);
+            $result->execute($params);
+
+            return $result->rowCount();
+
+        } catch (PDOException $e) {
+            echo "Erreur PDO : " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Erreur générale : " . $e->getMessage();
+        }
+    }
+
+
+
 
 
     // fonction d'ajout des presentation : *****************************************************************************************************************************************
@@ -109,76 +170,37 @@ class Presentation extends Db
     }
 
     // fonction qui retourne toutes les presentaion *****************************************************************************************************************************************
-    // public function AllPresentaion($filter, $subToSearch = '')
-    // {
-    //     try {
-    //         $sql = "SELECT id_presentation, titre, description, DATE_FORMAT(date_realisation, '%d-%m-%Y') as date_realisation, lien_presentation, status, id_enseignant FROM presentations ";
-    //         $result =  $this->conn->prepare($sql);
-
-
-    //         if ($_SESSION['user_loged_in_role'] == 'Enseignant') {
-    //             $sql .= " WHERE id_enseignant = ?";
-    //             $result =  $this->conn->prepare($sql);
-    //             $result->execute([$_SESSION['user_loged_in_id']]);
-    //             // $result->execute();
-    //         } elseif ($_SESSION['user_loged_in_role'] == 'Etudiant') {
-
-    //             // add filter to query
-    //             if ($filter == 'A venir') {
-    //                 $sql .= " WHERE status = 'A venir'";
-    //             } elseif ($filter == 'Passé') {
-    //                 $sql .= " WHERE status = 'Passé'";
-    //             }
-
-    //             // add search condition to sql
-    //             if ($subToSearch) {
-    //                 $sql .= " WHERE titre LIKE ?";
-    //             }
-
-    //             $resul = $this->conn->prepare($sql);
-    //             $resul->execute($subToSearch ? ["%$subToSearch%"] : []);
-    //         }
-
-
-    //         return $result->fetchAll(PDO::FETCH_OBJ);
-    //     } catch (PDOException $e) {
-    //         echo "Erreur PDO : " . $e->getMessage();
-    //     } catch (Exception $e) {
-    //         echo "Erreur générale : " . $e->getMessage();
-    //     }
-    // }
-
-
-
-
+    
     public function AllPresentaion($filter, $subToSearch = '')
     {
         try {
             // Début de la requête SQL
-            $sql = "SELECT id_presentation, titre, description, 
-                       DATE_FORMAT(date_realisation, '%d-%m-%Y') AS date_realisation, 
-                       lien_presentation, status, id_enseignant 
-                FROM presentations";
+            $sql = "SELECT p.id_presentation, p.titre, p.description, 
+                           DATE_FORMAT(p.date_realisation, '%d-%m-%Y') AS date_realisation, 
+                           p.lien_presentation, p.status, p.id_enseignant,
+                           CONCAT(u.prenom, ' ', u.nom) AS nom_enseignant
+                    FROM presentations p
+                    LEFT JOIN users u ON p.id_enseignant = u.id_user";
 
             // Tableau pour stocker les valeurs des paramètres de la requête
             $params = [];
             $conditions = [];
 
             // Filtrer selon le rôle de l'utilisateur
-            if ($_SESSION['user_loged_in_role'] == 'Enseignant') {
-                $conditions[] = "id_enseignant = ?";
+            if (isset($_SESSION['user_loged_in_role']) && $_SESSION['user_loged_in_role'] == 'Enseignant') {
+                $conditions[] = "p.id_enseignant = ?";
                 $params[] = $_SESSION['user_loged_in_id'];
             }
 
             // Ajouter le filtre par statut (pour enseignants et étudiants)
             if ($filter == 'A venir' || $filter == 'Passé') {
-                $conditions[] = "status = ?";
+                $conditions[] = "p.status = ?";
                 $params[] = $filter;
             }
 
             // Ajouter la recherche par titre (pour enseignants et étudiants)
             if ($subToSearch) {
-                $conditions[] = "titre LIKE ?";
+                $conditions[] = "p.titre LIKE ?";
                 $params[] = "%$subToSearch%";
             }
 
@@ -199,5 +221,21 @@ class Presentation extends Db
             error_log("Erreur générale : " . $e->getMessage());
             return false;
         }
+    }
+
+
+
+
+
+    public function getAllpresentations()
+    {
+        $query = "SELECT * FROM presentations WHERE status = 'A venir'";
+
+        $resul = $this->conn->prepare($query);
+        $resul->execute();
+
+        // Fetch and return results
+        $users = $resul->fetchAll(PDO::FETCH_OBJ);
+        return $users;
     }
 }

@@ -1,7 +1,12 @@
 <?php
+
+use App\Models\MailerModel;
+
 require_once(__DIR__ . '/../models/UserModel.php');
 require_once(__DIR__ . '/../models/PresentationModel.php');
 require_once(__DIR__ . '/../models/SuggestionModel.php');
+require_once(__DIR__ . '/../models/CalendarModel.php');
+require_once(__DIR__ . '/../models/MailerModel.php');
 
 class TeacherController extends BaseController
 {
@@ -9,6 +14,8 @@ class TeacherController extends BaseController
    private $UserModel;
    private $TopicModel;
    private $suggModel;
+   private $CalendarModel;
+   private $mailModel;
 
 
    // *****************************************************************************************************************************************
@@ -17,18 +24,65 @@ class TeacherController extends BaseController
       $this->UserModel = new User();
       $this->TopicModel = new Presentation();
       $this->suggModel = new Suggestion();
+      $this->CalendarModel = new Calendar();
+      $this->mailModel = new MailerModel();
    }
 
 
    // *****************************************************************************************************************************************
-   public function index()
+   public function showCalendar()
    {
-      if (!isset($_SESSION['user_loged_in_id'])) {
-         header("Location: /login ");
-         exit;
-      }
-      $this->renderDashboard('teacher/calendar');
+      $calendar = $this->CalendarModel->AllPresentationCalendar();
+      $students = $this->UserModel->getAllStudent();
+      $presentations = $this->TopicModel->getAllpresentations();
+
+      // var_dump($presentations);
+
+
+      $this->renderDashboard('teacher/calendar', ["calendarEvents" => $calendar, "students" => $students, "presentations" => $presentations]);
    }
+
+
+   // *****************************************************************************************************************************************
+   public function addToCalendar()
+   {
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+         if (isset($_POST['addToCalendrier'])) {
+            $title = $_POST['titre'];
+            $students = $_POST['students'] ?? [];
+            $date = $_POST['date'];
+
+            if (empty($title) || empty($students) || empty($date)) {
+               die("Erreur : Tous les champs doivent être remplis !");
+            }
+
+            $this->CalendarModel->setIdPresentation($title);
+            $this->CalendarModel->setDateEvent($date);
+
+
+            foreach ($students as $student) {
+               $this->CalendarModel->setIdStudent($student);
+               $lastInsertId = $this->CalendarModel->addToCalendar();
+
+               $student = $this->UserModel->getUserById($student);
+               $email = $student->email;
+               $nom = $student->nom;
+               $prenom = $student->prenom;
+               $sujet = "Nouvelle présentation assignée";
+               $message = "Un enseignant a été assigné à une nouvelle présentation intitulée \"$title\", prévue pour le $date.";
+               $body = "<p>Bonjour <strong>$prenom $nom</strong>,<br></p><p>$message</p><br><p>Cordialement, VeilleHub.</p>";
+
+               $this->mailModel->envoyerEmail($email, $nom, $prenom, $sujet, $body);
+            }
+
+            header('Location: /teacher/calendar');
+         }
+      }
+   }
+
+
+
+
 
 
    // *****************************************************************************************************************************************
@@ -62,6 +116,19 @@ class TeacherController extends BaseController
       $this->renderDashboard('teacher/subjects', ["subjects" => $subjects]);
       // $subjects = $this->TopicModel->AllPresentaion();
       // $this->renderDashboard('teacher/subjects', ["subjects" => $subjects]);
+   }
+
+
+   // *****************************************************************************************************************************************
+   public function updatePresentation()
+   {
+      if ($_SERVER["REQUEST_METHOD"] == "GET") {
+
+         $idPresentation = $_GET['id'];
+         $this->TopicModel->setId($idPresentation);
+         $subject = $this->TopicModel->getPresentationById();
+         $this->renderDashboard('/teacher/actions/update', ["subject" => $subject]);
+      }
    }
 
 
@@ -116,11 +183,43 @@ class TeacherController extends BaseController
       }
    }
 
+
+
+   public function saveUpdatePresentation()
+   {
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+         if (isset($_POST['btn_update_subject'])) {
+            $id_update = $_POST['id_presentation_update'];
+            $title = trim($_POST['titre']);
+            $description = trim($_POST['description']);
+            $date = $_POST['date'];
+            $status = $_POST['status'];
+
+            $this->TopicModel->setId($id_update);
+
+            // Vérifie si "lien" est défini, sinon met à NULL
+            $lien = !empty($_POST['lien']) ? $_POST['lien'] : null;
+
+            // Exécute la mise à jour et vérifie le résultat
+            $updateSuccess = $this->TopicModel->updatePresentation($title, $description, $date, $status, $lien);
+
+            if ($updateSuccess) {
+               header('Location: /teacher/subjects');
+               exit; // Assure que la redirection est bien exécutée
+            } else {
+               echo "Erreur : La mise à jour a échoué.";
+            }
+         }
+      }
+   }
+
+
    // *****************************************************************************************************************************************
    public function handleSuggestions()
    {
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+         // delete suggestion 
          if (isset($_POST['btn_delete_sugg'])) {
 
             $id_sugg = $_POST['id_delete'];
@@ -136,9 +235,7 @@ class TeacherController extends BaseController
          }
 
 
-
-
-
+         // status
          if (isset($_POST['btn_status_sugg'])) {
 
             $id_sugg = $_POST['id_sugg'];
@@ -193,6 +290,17 @@ class TeacherController extends BaseController
             $newStatus = ($oldStatus === 1) ? 0 : 1;
 
             $updatedRows = $this->UserModel->changeStatusUser($id_user, $newStatus);
+
+            $student = $this->UserModel->getUserById($id_user);
+            $email = $student->email;
+            $nom = $student->nom;
+            $prenom = $student->prenom;
+            $sujet = "Status de Compte";
+            $stt = ($newStatus === 1) ? "Valider" : "Bloquer";
+            $message = "Votre Compte est $stt.";
+            $body = "<p>Bonjour <strong>$prenom $nom</strong>,<br></p><p>$message</p><br><p>Cordialement, VeilleHub.</p>";
+
+            $this->mailModel->envoyerEmail($email, $nom, $prenom, $sujet, $body);
 
             if ($updatedRows > 0) {
                header('Location: /teacher/students');

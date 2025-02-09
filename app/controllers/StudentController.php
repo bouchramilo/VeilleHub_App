@@ -2,13 +2,17 @@
 // require_once(__DIR__ . '/../models/UserModel.php');
 require_once(__DIR__ . '/../models/SuggestionModel.php');
 require_once(__DIR__ . '/../models/PresentationModel.php');
+require_once(__DIR__ . '/../models/CalendarModel.php');
 
+use App\Models\MailerModel;
 
 class StudentController extends BaseController
 {
     // **********************************************************************************************************************************************************************
     private $SuggestionModel;
     private $TopicModel;
+    private $CalendarModel;
+
 
 
     // **********************************************************************************************************************************************************************
@@ -16,6 +20,7 @@ class StudentController extends BaseController
     {
         $this->SuggestionModel = new Suggestion();
         $this->TopicModel = new Presentation();
+        $this->CalendarModel = new Calendar();
     }
 
 
@@ -73,6 +78,8 @@ class StudentController extends BaseController
     // **********************************************************************************************************************************************************************
     public function show_Calendar()
     {
+        $calendar = $this->CalendarModel->AllPresentationCalendar();
+        $this->render('student/calendar', ["calendarEvents" => $calendar]);
         $this->render('student/calendar');
     }
 
@@ -85,7 +92,6 @@ class StudentController extends BaseController
 
         $suggestions = $this->SuggestionModel->AllSuggestions($filter, $suggToSearch);
         $this->render('student/my_suggestions', ["suggestions" => $suggestions]);
-
     }
 
 
@@ -155,6 +161,24 @@ class StudentController extends BaseController
                     //   echo "vous aver ajoutez un TOPIC avec succes .";
                 }
             }
+        }
+    }
+
+
+
+    public function envoyerNotification($email, $prenom, $nom)
+    {
+        $mailer = new MailerModel();
+
+        $sujet = "Notification Importante";
+        $message = "Votre présentation est prévue pour le 15 décembre à 14h.";
+
+        $resultat = $mailer->envoyerEmail($email, $prenom, $nom, $sujet, $message);
+
+        if ($resultat === true) {
+            echo "Email envoyé avec succès à $email.";
+        } else {
+            echo "Erreur : " . $resultat;
         }
     }
 }
