@@ -116,7 +116,8 @@ class StudentController extends BaseController
     // **********************************************************************************************************************************************************************
     public function show_Statistiques()
     {
-        $this->render('student/statistiques');
+        $statistics = $this->SuggestionModel->getStatistique();
+      $this->render('student/statistiques', ["statistics" => $statistics]);
     }
 
 

@@ -204,44 +204,69 @@ class Suggestion extends Db
 
 
     // **********************************************************************************************************************************************************************
-    // public function AllSuggestions($filter, $suggToSearch)
-    // {
-    //     try {
-    //         $sql = "SELECT 
-    //         s.id_sujet, 
-    //         s.titre, 
-    //         s.description, 
-    //         DATE_FORMAT(s.date_proposer, '%d-%m-%Y') AS date_proposer, 
-    //         s.status, 
-    //         s.id_enseignant, 
-    //         s.id_etudiant,
-    //         u.nom AS nom,
-    //         u.prenom AS prenom
-    //     FROM sujets s
-    //     JOIN users u ON s.id_etudiant = u.id_user";
+    public function getStatistique()
+    {
+        try {
+            // ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            $sql1 = "SELECT COUNT(*) as total_suggestions FROM sujets WHERE id_etudiant = ?";
 
-    //         // add filter to query
-    //         if ($_SESSION['user_loged_in_role'] == 'Enseignant') {
-    //             $sql .= " where s.status != 'Rejeté'";
-    //             $result =  $this->conn->prepare($sql);
-    //             $result->execute();
-    //         } elseif ($_SESSION['user_loged_in_role'] == 'Etudiant') {
-    //             $sql .= " where s.id_etudiant = ?";
-    //             $result =  $this->conn->prepare($sql);
-    //             $result->execute([$_SESSION['user_loged_in_id']]);
-    //         }
+            // ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            $sql2 = "SELECT 
+                    SUM(CASE WHEN p.status = 'Passé' THEN 1 ELSE 0 END) AS passe,
+                    SUM(CASE WHEN p.status = 'A venir' THEN 1 ELSE 0 END) AS a_venir
+                 FROM calendriers c
+                 JOIN presentations p ON c.id_presentation = p.id_presentation
+                 WHERE c.id_etudiant = ?";
+
+            // ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            $sql3 = "SELECT 
+                    (COUNT(CASE WHEN status = 'Validé' THEN 1 END) / COUNT(*)) * 100 AS taux_acceptation
+                 FROM sujets
+                 WHERE id_etudiant = ?";
+
+            // ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            $sql4 = "SELECT 
+                    c.id_etudiant, 
+                    u.nom, 
+                    u.prenom, 
+                    COUNT(c.id_presentation) AS total_presentations
+                 FROM calendriers c
+                 JOIN users u ON c.id_etudiant = u.id_user
+                 GROUP BY c.id_etudiant, u.nom, u.prenom
+                 ORDER BY total_presentations DESC";
+
+            // ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            $stmt1 = $this->conn->prepare($sql1);
+            $stmt1->execute([$_SESSION['user_loged_in_id']]);
+            $suggestions = $stmt1->fetch(PDO::FETCH_ASSOC)['total_suggestions'];
+
+            $stmt2 = $this->conn->prepare($sql2);
+            $stmt2->execute([$_SESSION['user_loged_in_id']]);
+            $presentations = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+            $stmt3 = $this->conn->prepare($sql3);
+            $stmt3->execute([$_SESSION['user_loged_in_id']]);
+            $taux_acceptation = $stmt3->fetch(PDO::FETCH_ASSOC)['taux_acceptation'] ?? 0;
+
+            $stmt4 = $this->conn->query($sql4);
+            $classement = $stmt4->fetchAll(PDO::FETCH_ASSOC);
+
+            // Retourner les résultats sous forme de tableau associatif ++++++++++++++++++++++++++++++++++++++++++++++++
+            return [
+                'total_suggestions' => $suggestions,
+                'presentations_A_venir' => $presentations['a_venir'],
+                'presentations_Passe' => $presentations['passe'],
+                'taux_acceptation' => round($taux_acceptation, 2),
+                'classement' => $classement
+            ];
+        } catch (PDOException $e) {
+            echo "Erreur PDO : " . $e->getMessage();
+            return [];
+        }
+    }
 
 
-    //         return $result->fetchAll(PDO::FETCH_OBJ);
-
-    //     } catch (PDOException $e) {
-    //         echo "Erreur PDO : " . $e->getMessage();
-    //     } catch (Exception $e) {
-    //         echo "Erreur générale : " . $e->getMessage();
-    //     }
-    // }
-
-
+    // **********************************************************************************************************************************************************************
     public function AllSuggestions($filter, $suggToSearch = '')
     {
         try {
