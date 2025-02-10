@@ -37,12 +37,19 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-12 max-lg:max-w-3xl max-md:max-w-md mx-auto ">
 
                 <?php foreach ($subjects as $subject): ?>
-                    <div class="p-6 bg-indigo-600 bg-opacity-50 border-none rounded-xl shadow-2xl shadow-black hover:shadow-xl">
+                    <div class="p-6 bg-white bg-opacity-50 border-none rounded-xl shadow-2xl shadow-black hover:shadow-xl">
                         <span class="text-sm block mb-2 text-black font-semibold"><?= $subject->date_realisation; ?> | Status : <?= $subject->status; ?></span>
-                        <h3 class="text-xl font-bold text-white"><?= $subject->titre; ?></h3>
+                        <a href="/student/actions/showPresentation?id_presentation=<?= $subject->id_presentation; ?>">
+                            <h3 class="text-xl font-bold text-indigo-600 hover:text-green-500"><?= $subject->titre; ?></h3>
+                        </a>
                         <div class="mt-4">
-                            <p class="text-gray-200 text-sm "><?= $subject->description; ?></p>
+                            <p class="text-black text-sm "><?= $subject->description; ?></p>
                         </div>
+                        <?php if ($subject->status == 'Passé'): ?>
+                            <div class="mt-4">
+                                <p class="text-black text-sm ">link : <a href="<?= $subject->lien_presentation; ?>" class="text-indigo-600 hover:text-green-500">Click here</a></p>
+                            </div>
+                        <?php endif; ?>
                     </div>
 
                 <?php endforeach; ?>

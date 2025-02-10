@@ -80,7 +80,20 @@ class StudentController extends BaseController
     {
         $calendar = $this->CalendarModel->AllPresentationCalendar();
         $this->render('student/calendar', ["calendarEvents" => $calendar]);
-        $this->render('student/calendar');
+        // $this->render('student/calendar');
+    }
+
+
+    // **********************************************************************************************************************************************************************
+    public function showPresentation()
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+
+            $this->TopicModel->setId($_GET['id_presentation']);
+            $presentation = $this->TopicModel->getPresentationByID();
+            $this->render('/student/actions/showPresentation', ["presentation" => $presentation]);
+            // $this->render('student/calendar');
+        }
     }
 
 
@@ -117,7 +130,7 @@ class StudentController extends BaseController
     public function show_Statistiques()
     {
         $statistics = $this->SuggestionModel->getStatistique();
-      $this->render('student/statistiques', ["statistics" => $statistics]);
+        $this->render('student/statistiques', ["statistics" => $statistics]);
     }
 
 

@@ -66,6 +66,7 @@ Route::get('/student/subjects', [StudentController::class, 'show_Subjects']);
 Route::get('/student/notifications', [StudentController::class, 'show_Notifications']);
 Route::get('/student/statistiques', [StudentController::class, 'show_Statistiques']);
 Route::get('/student/actions/updateSgg', [StudentController::class, 'updateForm']);
+Route::get('/student/actions/showPresentation', [StudentController::class, 'showPresentation']);
 
 // POST
 Route::post('/student/my_suggestions/add', [StudentController::class, 'add_Suggestion']);
